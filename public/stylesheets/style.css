@@ -308,3 +308,17 @@ span.max{
     height: 28px;
   }
 }
+
+#footer{
+  position: absolute;
+  font-size: small;
+  bottom: 0;
+  right: 0;
+  padding-right: 5px;
+  text-align: right;
+}
+
+a{
+  text-decoration: none;
+  color: #000000;
+}
