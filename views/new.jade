@@ -1,0 +1,138 @@
+doctype html
+html
+    head
+        title Abfahrten
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        meta(name="viewport" content="width=device-width")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+        script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+        script(src="/javascripts/index.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js")
+        meta(charset='utf-8')
+    body
+
+    #toast
+        | Aktualisiere...
+    #loading
+    #top
+        #topheader
+            h1 Nächste Abfahrten
+            br
+            span.subheader(onclick="refresh()")
+            i.material-icons.sync(onclick="refresh()")
+                | sync
+    #main
+        #boxes
+            .box.box-width
+                .boxheader
+                    .boxheader-text
+                        h2 U Frankfurter Tor (Berlin)
+                        br
+                        span.id= names.s1
+                    div.button(onclick='maximize(this)')
+                        i.material-icons.center
+                            | arrow_forward
+
+                each elem, index in deps1
+                    if index<4
+                        .departure
+                            .icon
+                                if elem['type'] == 'Bus'
+                                    img(src='/images/bus.jpg')
+                                else if elem['type'] == 'U-Bahn'
+                                    img(src='/images/ubahn.png')
+                                else if elem['type'] == 'RB'
+                                    img(src='/images/bahn.gif')
+                                else if elem['type'] == 'Tram'
+                                    img(src='/images/tram.png')
+                                else
+                                    img(src='/images/sbahn.png')
+                            .text
+                                span.depTime= elem['time']
+                                br
+                                span.line= elem['line']
+                                span.dest= ' ► ' + elem['dest']
+                                br
+                                span.time
+
+                        .borderline
+                        script.
+                            allTimes.push("#{elem['time']}");
+
+            .box.box-width
+                .boxheader
+                    .boxheader-text
+                        h2 U Friedrichsfelde (Berlin)
+                        br
+                        span.id= names.s2
+                    div.button(onclick='maximize(this)')
+                        i.material-icons.center
+                            | arrow_forward
+
+                each elem, index in deps2
+                    if index<4
+                        .departure
+                            .icon
+                                if elem['type'] == 'Bus'
+                                    img(src='/images/bus.jpg')
+                                else if elem['type'] == 'U-Bahn'
+                                    img(src='/images/ubahn.png')
+                                else if elem['type'] == 'RB'
+                                    img(src='/images/bahn.gif')
+                                else if elem['type'] == 'Tram'
+                                    img(src='/images/tram.png')
+                                else
+                                    img(src='/images/sbahn.png')
+                            .text
+                                span.depTime= elem['time']
+                                br
+                                span.line= elem['line']
+                                span.dest= ' ► ' + elem['dest']
+                                br
+                                span.time
+
+                        .borderline
+                        script.
+                            allTimes.push("#{elem['time']}");
+
+            .box.box-width
+                .boxheader
+                    .boxheader-text
+                        h2 S Ostkreuz Bhf (Berlin)
+                        br
+                        span.id= names.s3
+                    div.button(onclick='maximize(this)')
+                        i.material-icons.center
+                            | arrow_forward
+
+                each elem, index in deps3
+                    if index<4
+                        .departure
+                            .icon
+                                if elem['type'] == 'Bus'
+                                    img(src='/images/bus.jpg')
+                                else if elem['type'] == 'U-Bahn'
+                                    img(src='/images/ubahn.png')
+                                else if elem['type'] == 'RB'
+                                    img(src='/images/bahn.gif')
+                                else if elem['type'] == 'Tram'
+                                    img(src='/images/tram.png')
+                                else
+                                    img(src='/images/sbahn.png')
+                            .text
+                                span.depTime= elem['time']
+                                br
+                                span.line= elem['line']
+                                span.dest= ' ► ' + elem['dest']
+                                br
+                                span.time
+
+                        .borderline
+                        script.
+                            allTimes.push("#{elem['time']}");
+
+    script(type='text/javascript').
+        refreshTime(allTimes);
+        setInterval(function () {
+            refreshTime(allTimes);
+        }, 60000);

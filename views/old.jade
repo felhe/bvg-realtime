@@ -1,0 +1,313 @@
+doctype html
+html
+  head
+    title Abfahrten
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+    script(src="https://code.jquery.com/jquery-3.2.1.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js")
+    meta(charset='utf-8')
+  body
+    script(type='text/javascript').
+        function refreshTime(time) {
+            var currentTime = "1970-01-01T" + new Date().toLocaleTimeString();
+            $(".subheader").text("Zuletzt aktualisiert vor " + Math.floor((Date.now()-loadTime)/1000/60) + " min")
+            var time1 = new Date(currentTime).getTime(); // current time as timestamp
+            for (var i = 0; i < time.length; i++) {
+                var departureTime = "1970-01-01T" + time[i];
+                var time2 = new Date(departureTime).getTime(); // php time as timestamp
+                var timediff = Math.ceil((time2 - time1) / 1000 / 60); // Difference in min, rounded
+                if (timediff < 0) {
+                    document.getElementsByClassName('departure')[i].style.opacity = '0.2';
+                    timediff = 0;
+                }
+                document.getElementsByClassName('time')[i].innerHTML = 'in ' + timediff + ' min';
+            }
+        }
+        var allTimes = []; // create Array
+        var loadTime = Date.now();
+
+        $(".subheader").onclick=refresh;
+
+        function refresh() {
+            $(".box").each(function () {
+                var id = $(".id", this).html();
+                var box = this;
+                getData(id, function (deps) {
+                    loadTime = Date.now();
+                    fillNew(deps, box);
+                })
+            })
+        }
+
+        function fillNew(deps, box){
+            allTimes = [];
+            var depDiv = $(".departure:first", box).clone().css("opacity", "1");
+            var border = $(".borderline:first", box).clone();
+            $(".departure", box).remove();
+            $(".borderline", box).remove();
+            for(i=0; i<deps.length; i++){
+              $(box).append(depDiv.clone());
+              $(box).append(border.clone());
+              $(".depTime:last", box).text(deps[i].time);
+              $(".line:last", box).text(deps[i].line);
+              $(".dest:last", box).text(' ► '+deps[i].dest);
+              if (deps[i].type === 'Bus') $("img:last", box).prop("src", "http://felhe.tk/vbb/img/bus.jpg");
+              else $("img:last", box).prop("src", "http://felhe.tk/vbb/img/sbahn.png")
+            }
+            $(".departure:gt(3)", box).css("display", "none");
+            $(".borderline:gt(3)", box).css("display", "none");
+            $(".depTime").each(function () {
+                allTimes.push($(this).text());
+            });
+            refreshTime(allTimes);
+        }
+
+        var left = 0;
+
+        function maximize(node) {
+            var box = node.parentNode.parentNode;
+
+            var id = $(".id", box).html();
+            if ($(box).hasClass("latest")){
+                animate();
+            }
+            else{
+                getData(id, function (result) {
+                    $(box).addClass("latest");
+                    fillNew(result, box);
+                    animate();
+                });
+            }
+
+            function animate() {
+                node.setAttribute('onclick', 'minimize(this)');
+
+                $(node).fadeOut(200);
+                left = box.offsetLeft + "px";
+                box.style.left = left;
+                box.style.position = "absolute";
+                box.style.display = "block";
+                $(".box").not(box).fadeOut(0, "easeInOutExpo", function () {
+                    $(".departure, .borderline", box).hide();
+                    $(".text").css({"text-align": "right", "margin": "0"});
+                    $(".text br").css("display", "none");
+                    $(".text").css("width", "90%");
+                    $(".departure").css({"height": "30px", "padding": "5px 0", "width": "80%", "margin": "0 auto"});
+                    $(".borderline").css("width", "100%");
+                    $(".box span").css({"width": "20%", "display": "inline-block"});
+                    $(".dest").css({"width": "25%", "padding-left": "15%", "text-align":"left"});
+                    $(".icon img").css({
+                        "margin": "0",
+                        "padding": "0",
+                        "vertical-align": "middle",
+                        "height": "30px",
+                        "width": "30px"
+                    });
+                    $(".icon").css({
+                        "height": "20px",
+                        "width": "20px",
+                        "margin": "0"
+                    });
+                    //$(".departure", box).css("display", "block");
+                    //$(".borderline", box).css("display", "block");
+                });
+
+                //$(box.c).fadeOut();
+                //$(box).removeClass("box-width");
+                $(box).animate({
+                    "left": "0",
+                    //"margin-right": "0",
+                    width: "100%",
+                    height: "+=13px"
+                }, 800, "easeInOutExpo");
+                $(".boxheader", box).animate({
+                    width: "100%"
+                }, 800, "easeInOutExpo");
+                $(".boxheader-text", box).animate({
+                    left: "18px"
+                }, 800, "easeInOutExpo", function () {
+                    $("i", node).text("close");
+                    $(node).fadeIn();
+                });
+                var d = 70, factor = d / 3 * 2; // increment delay by two thirds original delay
+                $(".departure, .borderline", box).delay(500).each(function () {
+                    $(this).delay(d = d + factor).fadeIn(400);
+                });
+            }
+        }
+
+        function minimize(node) {
+            $("*").stop( true, true );
+            var box = node.parentNode.parentNode;
+
+            node.setAttribute('onclick','maximize(this)');
+            $(node).fadeOut(200);
+            $(".departure, .borderline", box).hide();
+            $(".text").css({"margin": "", "text-align": ""});
+            $(".text br").css("display", "");
+            $(".text").css("width", "");
+            $(".departure").css({"height": "", "padding": "", "width": "", "margin": ""});
+            $(".borderline").css("width", "");
+            $(".box span").css({"width": "", "display": "", "padding-left": ""});
+            $(".dest").css({"width": "", "padding-left": "", "text-align":""});
+            $(".icon, .icon img").css({
+                "height": "",
+                "width": "",
+                "margin": "",
+                "padding": "",
+                "vertical-align": ""
+            });
+
+            $(box).animate({
+                width: "430px",
+                height: "+=-13px",
+                left: left
+            }, 700, "easeInOutExpo", function () {
+                $(".departure, .borderline", box).not(".departure:gt(3), .borderline:gt(2)", box).fadeIn();
+                $("i", node).text("arrow_forward");
+                $(node).fadeIn("easeInOutExpo");
+                box.style.position = "relative";
+                box.style.left = "0";
+                $(".box").not(box).fadeIn(400);
+            });
+            //var d = 400, factor = d / 3 * 2; // increment delay by two thirds original delay
+        }
+
+        function getData(id, callback) {
+            console.log("Fetching Data for "+id);
+            //$("#toast").fadeIn();
+            //setTimeout(function() {$("#toast").fadeOut();}, 6000);
+            $("#toast, #loading").stop(true, true);
+            $("#loading").animate({
+                left: "100%"
+            }, 800, "easeInOutExpo", function () {
+                $("#loading").animate({
+                    right: "100%",
+                    left: "-150px"
+                }, 800, "easeInOutExpo");
+            });
+            $("#toast").fadeIn(600).delay(300).fadeOut(600).fadeIn(600).delay(300).fadeOut(600);
+            $.ajax({
+                url: "/"+id+"/13",
+                success: function (result) {
+                  callback(result);
+                }
+            });
+        }
+
+        jQuery.extend(jQuery.easing,
+        {
+        easeInOutMaterial: function (x, t, b, c, d) {
+          if ((t /= d / 2) < 1) return c/2*t*t + b;
+          return c/4*((t-=2)*t*t + 2) + b;
+        }
+        });
+
+  #toast
+      | Aktualisiere...
+  #loading
+  #top
+      #topheader
+        h1 Nächste Abfahrten
+        br
+        span.subheader(onclick="refresh()")
+        i.material-icons.sync(onclick="refresh()")
+          | sync
+    #main
+      #boxes
+        .box.box-width
+          .boxheader
+            .boxheader-text
+              h2 Feuersteinerstr. (Berlin)
+              br
+              span.id
+                | 9175501
+            div.button(onclick='maximize(this)')
+              i.material-icons.center
+                | arrow_forward
+
+          each elem in deps1
+            .departure
+              .icon
+                if elem['type'] == 'Bus'
+                  img(src='http://felhe.tk/vbb/img/bus.jpg')
+                else
+                  img(src='http://felhe.tk/vbb/img/sbahn.png')
+              .text
+                span.depTime= elem['time']
+                br
+                span.line= elem['line']
+                span.dest= ' ► '+elem['dest']
+                br
+                span.time
+
+            .borderline
+            script.
+              allTimes.push("#{elem['time']}");
+
+        .box.box-width
+          .boxheader
+            .boxheader-text
+              h2 Irmastr. (Berlin)
+              br
+              span.id
+                | 9171502
+            div.button(onclick='maximize(this)')
+              i.material-icons.center
+                | arrow_forward
+
+          each elem in deps2
+            .departure
+              .icon
+                if elem['type'] == 'Bus'
+                  img(src='http://felhe.tk/vbb/img/bus.jpg')
+                else
+                  img(src='http://felhe.tk/vbb/img/sbahn.png')
+              .text
+                span.depTime= elem['time']
+                br
+                span.line= elem['line']
+                span.dest= ' ► ' + elem['dest']
+                br
+                span.time
+
+            .borderline
+            script.
+                allTimes.push("#{elem['time']}");
+
+        .box.box-width
+          .boxheader
+            .boxheader-text
+              h2 S Wuhlheide (Berlin)
+              br
+              span.id
+                | 9180002
+            div.button(onclick='maximize(this)')
+              i.material-icons.center
+                | arrow_forward
+
+          each elem in deps3
+            .departure
+              .icon
+                if elem['type'] == 'Bus'
+                  img(src='http://felhe.tk/vbb/img/bus.jpg')
+                else
+                  img(src='http://felhe.tk/vbb/img/sbahn.png')
+              .text
+                span.depTime= elem['time']
+                br
+                span.line= elem['line']
+                span.dest= ' ► ' + elem['dest']
+                br
+                span.time
+
+            .borderline
+            script.
+                allTimes.push("#{elem['time']}");
+
+    script(type='text/javascript').
+        refreshTime(allTimes);
+        setInterval(function () {
+            refreshTime(allTimes);
+        }, 60000);

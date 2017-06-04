@@ -1,0 +1,310 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500);
+
+html, body{
+  background-color: #fafafa;
+  margin: 0 0;
+  padding: 0 0;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 21px;
+  color: #212121;
+}
+
+#toast{
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  color: #B2DFDB;
+}
+
+#loading{
+  background-color: #FFFFFF;
+  height: 4px;
+  width: 150px;
+  position: absolute;
+  left: -150px;
+  top: 0;
+}
+
+h1{
+  margin: 0;
+  color: #FFF;
+  font-size: 36px;
+  font-weight: 500;
+}
+
+h2{
+  margin: 0;
+  font-size: 27px;
+  font-weight: 500;
+  color: #FFF;
+}
+
+img{
+  width: 60px;
+  height: 60px;
+}
+
+#top{
+  background-color: #00796B;
+  width: 100%;
+  height: 300px;
+}
+
+#topheader{
+  width: 1370px;
+  margin: 0 auto;
+  padding: 65px;
+  color: #B2DFDB;
+}
+
+.subheader{
+  font-size: larger;
+}
+
+.sync{
+  padding: 0 10px;
+  vertical-align: top;
+  -webkit-transition: -webkit-transform .8s ease-in-out;
+  transition:         transform .8s ease-in-out;
+  font-size: xx-large !important;
+}
+
+.sync:hover{
+  -webkit-transform: rotate(360deg);
+  transform: rotate(360deg);
+  cursor: pointer;
+}
+
+#main{
+  width: 100%;
+  height: auto;
+}
+
+#boxes{
+  width: 1370px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.box{
+  height: 650px;
+  background-color: #FFF;
+  float: left;
+  margin: -75px auto 30px;
+  margin-right: 37.5px;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.box-width{
+  width: 430px;
+}
+
+.box:nth-child(3){
+  margin-right: 0;
+}
+
+.boxheader{
+  width: 100%;
+  height: 130px;
+  background-color: #009688;
+  margin: 0;
+  padding: 0;
+  color: #B2DFDB;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  position: relative;
+}
+
+.boxheader-text{
+  margin-left: 18px;
+  padding-top: 20px;
+}
+
+.departure{
+  width: 100%;
+  height: 130px;
+}
+
+.borderline{
+  border-bottom: 1px solid #B6B6B6;
+  width: 340px;
+  margin: 0 auto;
+}
+
+.borderline:last-of-type{
+  border-bottom: none;
+}
+
+.icon{
+  min-width: 60px;
+  margin: 35px 0 0 15px;
+  float: left;
+}
+
+.text{
+  width: 320px;
+  margin: 27.5px 0 0 20px;
+  float: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.button{
+  position: absolute;
+  top: -25px;
+  right: 30px;
+  border-radius: 100%;
+  background-color: #FFF;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+  color: #000;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.button:hover{
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.time{
+  color: #009688;
+}
+
+.borderline.max{
+  width: 100%;
+}
+
+.departure.max{
+  height: 30px;
+  padding: 5px 0;
+  width: 80%;
+  margin: 0 auto;
+}
+
+span.max{
+  width: 20%;
+  display: inline-block;
+}
+
+.dest.max{
+  width: 25%;
+  padding-left: 15%;
+  text-align: left;
+}
+
+.text.max{
+  text-align: right;
+  margin: 0;
+  width: 90%;
+}
+
+.text.max br{
+  display: none;
+}
+
+.icon.max img{
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+
+.icon.max{
+  margin: 0;
+}
+
+@media only screen and (max-width: 1450px) and (min-width: 1000px) {
+  .box{
+    width: 30%;
+    margin-left: 2.5%;
+    margin-right: 0;
+    float: left;
+    font-size: large;
+    height: 494px;
+  }
+
+  .button{
+    width: 50px;
+    height: 50px;
+    right: 20px;
+  }
+
+  h1{
+    font-size: xx-large;
+  }
+
+  .subheader{
+    font-size: x-large;
+  }
+
+  h2{
+    font-size: x-large;
+  }
+
+  #boxes{
+    width: 90%;
+  }
+
+  .borderline{
+    width: 80%;
+  }
+
+  .departure{
+    height: 90px;
+  }
+
+  .icon img{
+    width: 100%;
+    height: auto;
+  }
+  .icon{
+    min-width: 0;
+    margin: 0;
+    width: 10%;
+    padding: 30px 0 0 5%;
+  }
+
+  .text{
+    width: 80%;
+    margin: 0;
+    padding: 10px 0 0 5%;
+  }
+
+  .box.max{
+    margin-left: 0;
+  }
+
+  .icon.max{
+    padding: 0;
+    height: 100%;
+  }
+  .icon.max img{
+    height: 90%;
+    width: auto;
+    padding: 2% 0 0 0;
+
+  }
+
+  .text.max{
+    padding: 0;
+  }
+
+  .departure.max{
+    padding: 0;
+    height: 28px;
+  }
+}
