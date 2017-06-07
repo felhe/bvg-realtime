@@ -45,7 +45,7 @@ router.get('/', function (req, res, next) {
 })
 
 var getDeps = function(id, n, callback) {
-    request('http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys='+n, function (error, response, body) {
+    request('http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys=25', function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         //console.log('body:', body); // Print the HTML for the Google homepage.
@@ -53,17 +53,19 @@ var getDeps = function(id, n, callback) {
         var deps = [];
         $("tbody tr").each(function (i, element) {
             //text += $(this).text() + "<br>";
-            var dep = {};
-            dep.time = $('td', this).eq(0).text().replace(/\n/g, "").replace(/\*/g, "").replace(/ /g, "");
-            var line = $('td', this).eq(1).text().replace(/\n/g, "");
-            if (line.indexOf('S') !== -1) dep.type = 'S-Bahn';
-            else if (line.indexOf('U') !== -1) dep.type = 'U-Bahn';
-            else if (line.indexOf('RB') !== -1) dep.type = 'RB';
-            else if (line.indexOf('Tra') !== -1) dep.type = 'Tram';
-            else dep.type = 'Bus';
-            dep.line = line.replace('Bus', '');
-            dep.dest = $('td', this).eq(2).text().replace(/\n/g, "");
-            deps.push(dep);
+            if (i<n){
+                var dep = {};
+                dep.time = $('td', this).eq(0).text().replace(/\n/g, "").replace(/\*/g, "").replace(/ /g, "");
+                var line = $('td', this).eq(1).text().replace(/\n/g, "");
+                if (line.indexOf('S') !== -1) dep.type = 'S-Bahn';
+                else if (line.indexOf('U') !== -1) dep.type = 'U-Bahn';
+                else if (line.indexOf('RB') !== -1) dep.type = 'RB';
+                else if (line.indexOf('Tra') !== -1) dep.type = 'Tram';
+                else dep.type = 'Bus';
+                dep.line = line.replace('Bus', '');
+                dep.dest = $('td', this).eq(2).text().replace(/\n/g, "");
+                deps.push(dep);
+            }
         });
         //text = text.replace(/\*/g, "");
         //res.send(text);
