@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var request = require('request');
+var request = require('request')
+    ,   cachedRequest = require('cached-request')(request)
+    ,   cacheDirectory = "./tmp/cache";
+cachedRequest.setValue('ttl', 60000);
+cachedRequest.setCacheDirectory(cacheDirectory);
 var cheerio = require('cheerio');
 
 /* GET home page. */
@@ -13,7 +17,6 @@ router.get('/', function (req, res, next) {
     var s2 = "9161512";
     var s3 = "9120003";
 
-    console.log(deps2);
     getDeps(s1, 4, function (deps) {
         deps1 = deps;
         complete();
@@ -45,7 +48,7 @@ router.get('/', function (req, res, next) {
 })
 
 var getDeps = function(id, n, callback) {
-    request('http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys=25', function (error, response, body) {
+    cachedRequest({url: 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys=25'}, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         //console.log('body:', body); // Print the HTML for the Google homepage.
@@ -70,7 +73,6 @@ var getDeps = function(id, n, callback) {
         //text = text.replace(/\*/g, "");
         //res.send(text);
         //res.send(JSON.stringify(deps));
-        console.log(deps.length, n);
         callback(deps);
     });
 }
