@@ -13,9 +13,9 @@ router.get('/', function (req, res, next) {
     var deps2 = null;
     var deps3 = null;
 
-    var s1 = "9120008";
-    var s2 = "9161512";
-    var s3 = "9120003";
+    var s1 = "900120008";
+    var s2 = "900161512";
+    var s3 = "900120003";
 
     getDeps(s1, 4, function (deps) {
         deps1 = deps;
@@ -48,7 +48,7 @@ router.get('/', function (req, res, next) {
 })
 
 var getDeps = function(id, n, callback) {
-    cachedRequest({url: 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys=25'}, function (error, response, body) {
+    cachedRequest({url: 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?&input='+id+'&boardType=depRT&start=yes&maxJourneys=100'}, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         //console.log('body:', body); // Print the HTML for the Google homepage.
@@ -56,7 +56,7 @@ var getDeps = function(id, n, callback) {
         var deps = [];
         $("tbody tr").each(function (i, element) {
             //text += $(this).text() + "<br>";
-            if (i<n){
+            if (i<n && $(this).attr('class') != null){
                 var dep = {};
                 dep.time = $('td', this).eq(0).text().replace(/\n/g, "").replace(/\*/g, "").replace(/ /g, "");
                 var line = $('td', this).eq(1).text().replace(/\n/g, "");
